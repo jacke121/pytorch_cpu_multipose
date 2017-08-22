@@ -348,7 +348,7 @@ if __name__ == "__main__":
     _ = handle_one(np.ones((320,320,3)))
     
     # video_capture = cv2.VideoCapture('sample_image/images.mp4')
-    video_capture = cv2.VideoCapture(sys.argv[1])
+    video_capture = cv2.VideoCapture(0)
 
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     out = cv2.VideoWriter('output.mp4',fourcc, 20.0, (640,360))
