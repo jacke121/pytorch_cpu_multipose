@@ -7,14 +7,15 @@ import time
 import scipy
 import argparse
 import matplotlib
-from torch import np
 import pylab as plt
 from joblib import Parallel, delayed
 import util
+import tensorflow as tf
 import torch
 import torch as T
 import torch.nn as nn
 import torch.nn.functional as F
+from torch import np
 from torch.autograd import Variable
 from collections import OrderedDict
 from config_reader import config_reader
