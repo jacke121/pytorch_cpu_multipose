@@ -150,6 +150,7 @@ param_, model_ = config_reader()
 def handle_one(oriImg):
     
     # for visualize
+    print(oriImg.shape)
     canvas = np.copy(oriImg)
     imageToTest = Variable(T.transpose(T.transpose(T.unsqueeze(torch.from_numpy(oriImg).float(),0),2,3),1,2),volatile=True)
     print(oriImg.shape)
@@ -351,9 +352,11 @@ if __name__ == "__main__":
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     out = cv2.VideoWriter('output.mp4',fourcc, 20.0, (640,360))
 
+    print('Starting with video')
     while True:
         # Capture frame-by-frame
         ret, frame = video_capture.read()
+        print('Reading a frame:', ret)
         
         canvas = handle_one(frame)
 
