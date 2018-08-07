@@ -2,6 +2,7 @@
 This is a pytorch version of Realtime_Multi-Person_Pose_Estimation, origin code is here https://github.com/ZheC/Realtime_Multi-Person_Pose_Estimation 
 
 ## Introduction
+pip install sk-video
 Code repo for reproducing 2017 CVPR Oral paper using pytorch.  
 
 ## Results
