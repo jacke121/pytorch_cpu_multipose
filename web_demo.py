@@ -1,22 +1,18 @@
 import os
-import re
-import sys
 import cv2
 import math
 import time
+
+import datetime
 import scipy
 import argparse
-import matplotlib
-import pylab as plt
 from joblib import Parallel, delayed
-import skvideo.io
 import util
-import tensorflow as tf
 import torch
 import torch as T
 import torch.nn as nn
 import torch.nn.functional as F
-from torch import np
+import numpy as np
 from torch.autograd import Variable
 from collections import OrderedDict
 from config_reader import config_reader
@@ -141,13 +137,10 @@ class pose_model(nn.Module):
 
 model = pose_model(models)     
 model.load_state_dict(torch.load(weight_name))
-# model.cuda()
+model.cuda()
 model.float()
 model.eval()
-
 param_, model_ = config_reader()
-
- 
 def handle_one(oriImg):
     
     # for visualize
@@ -169,9 +162,9 @@ def handle_one(oriImg):
     imageToTest_padded = np.transpose(np.float32(imageToTest_padded[:,:,:,np.newaxis]), (3,2,0,1))/256 - 0.5
 
     feed = Variable(T.from_numpy(imageToTest_padded))
-
-    output1,output2 = model(feed)
-
+    time=datetime.datetime.now()
+    output1,output2 = model(feed.cuda())
+    print("time",(datetime.datetime.now()-time).microseconds)
     heatmap = nn.UpsamplingBilinear2d((oriImg.shape[0], oriImg.shape[1]))(output2)
 
     paf = nn.UpsamplingBilinear2d((oriImg.shape[0], oriImg.shape[1]))(output1)       
@@ -211,15 +204,10 @@ def handle_one(oriImg):
 
         all_peaks.append(peaks_with_score_and_id)
         peak_counter += len(peaks)
-        
-        
-        
-        
-        
+
     connection_all = []
     special_k = []
     mid_num = 10
-
     for k in range(len(mapIdx)):
         score_mid = paf_avg[:,:,[x-19 for x in mapIdx[k]]]
         candA = all_peaks[limbSeq[k][0]-1]
@@ -349,7 +337,7 @@ if __name__ == "__main__":
     _ = handle_one(np.ones((320,320,3)))
     
     # video_capture = cv2.VideoCapture('sample_image/images.mp4')
-    video_capture = skvideo.io.VideoCapture('sample_image/images.mp4')
+    video_capture = cv2.VideoCapture('sample_image/images.mp4')
 
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     out = cv2.VideoWriter('output.mp4',fourcc, 20.0, (640,360))
@@ -359,8 +347,10 @@ if __name__ == "__main__":
         # Capture frame-by-frame
         ret, frame = video_capture.read()
         print('Reading a frame:', ret)
-        
+
+        time1=datetime.datetime.now()
         canvas = handle_one(frame)
+        print("handle_one time",(datetime.datetime.now()-time1).microseconds)
 
         out.write(canvas)
 

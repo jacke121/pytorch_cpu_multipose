@@ -161,7 +161,7 @@ for i in range(1,7):
 new_state_dict = OrderedDict()
 
 for var_name in model.state_dict().keys():
-    print var_name
+    print(var_name)
     if 'weight' in var_name:
         name_in_caffe = match_dict[var_name.rsplit('.',1)[0]]
         data = net.params[name_in_caffe][0].data
@@ -169,7 +169,7 @@ for var_name in model.state_dict().keys():
         name_in_caffe = match_dict[var_name.rsplit('.',1)[0]]
         data = net.params[name_in_caffe][1].data  
     else:
-        print 'bad'
+        print('bad')
     new_state_dict[var_name] = torch.from_numpy(data).float()
     
 model.load_state_dict(new_state_dict)   
@@ -208,11 +208,11 @@ for m in range(len(multiplier)):
     
     output1_ = net.blobs[output_blobs.keys()[0]].data
     output2_ = net.blobs[output_blobs.keys()[1]].data
-    
-    print 'output1 have %10.10f%% relative error'%(np.linalg.norm(output1-output1_)/np.linalg.norm(output1_)*100)
-    print 'output2 have %10.10f%% relative error'%(np.linalg.norm(output2-output2_)/np.linalg.norm(output2_)*100)
-    
 
+    print(
+        'output1 have %10.10f%% relative error' % (np.linalg.norm(output1 - output1_) / np.linalg.norm(output1_) * 100))
+    print(
+        'output2 have %10.10f%% relative error' % (np.linalg.norm(output2 - output2_) / np.linalg.norm(output2_) * 100))
 
 torch.save(model.state_dict(), '../model/pose_model.pth')    
 
